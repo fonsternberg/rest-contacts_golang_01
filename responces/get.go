@@ -2,13 +2,13 @@ package responces
 
 import (
 	"database/sql"
-	"errors"
+	"log"
 )
 
-func Execute(db *sql.DB, responce string) (sql.Result, error) {
-	res, err := db.Exec(responce)
+func GetOne(db *sql.DB, dbname string, id int) {
+	rows, err := db.Query("SELECT ", id, "from ", dbname)
 	if err != nil {
-		return nil, errors.New("can't execute")
+		log.Fatalln("bad query")		
 	}
-	return res, err
+	
 }
