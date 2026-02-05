@@ -1,21 +1,40 @@
 package handler
 
 import (
-	"fmt"
+	"bufio"
 	"log"
-
+	"os"
+	"strings"
 )
 
 func Handler() {
 	var method, id, name, phone string
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	parts := strings.Fields(scanner.Text())
 
-	n, err := fmt.Scan(method, id, name, phone)
-	if n > 4 || err != nil {
-		log.Fatalln("Wrong format of response")
+	switch len(parts) {
+	case 1:
+		method = parts[0]
+	case 2:
+		method = parts[0]
+		id = parts[1]
+	case 4:
+		method = parts[0]
+		id = parts[1]
+		name = parts[2]
+		phone = parts[3]
+	default:
+		log.Fatalln("Wrong format of response")	
 	}
+
 	switch method {
 	case "GET":
-		runGet()
+		if len(parts) == 2 {
+			runGetOne()
+		} else if len(parts) == 1 {
+			runGetAll()
+		}
 	case "PUT":
 		runPut()
 	case "DELETE":

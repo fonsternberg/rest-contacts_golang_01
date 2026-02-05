@@ -12,10 +12,14 @@ func runPost() {
 
 }
 
-func runGet() {
+func runGetOne() {
 
 }
 
-func runDelete() {
+func runGetAll() {
 	
+}
+
+func runDelete() {
+
 }
