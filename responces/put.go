@@ -13,17 +13,18 @@ func isThereId(db *sql.DB, dbname string, cnt contact.Contact) bool {
 	if err != nil {
 		log.Fatalln("bad num of rows")
 	}
-	cols, err := rows.Columns()
-	if err != nil {
-		log.Fatalln("bad num of columns")
-	}
 	isId := false
-	for i := range cols {
-		colsName, err := strconv.Atoi(cols[i])
+	for rows.Next() {
+		var tempID string
+		err := rows.Scan(tempID)
 		if err != nil {
-			log.Fatalln("bad format of cols")
+			log.Fatalln("Wrong Id format")
 		}
-		if cnt.Id == colsName {
+		currentId, err := strconv.Atoi(tempID)
+		if err != nil {
+			log.Fatalln("id must be integer")
+		}
+		if cnt.Id == currentId {
 			isId = true
 		}
 	}
