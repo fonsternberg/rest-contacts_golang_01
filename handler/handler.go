@@ -2,12 +2,17 @@ package handler
 
 import (
 	"bufio"
+	"database/sql"
 	"log"
 	"os"
+	"strconv"
 	"strings"
+
+	"github.com/voyadger01/rest-contacts_golang_01/contact"
+	"github.com/voyadger01/rest-contacts_golang_01/responces"
 )
 
-func Handler() {
+func Handler(db *sql.DB, dbname string) {
 	var method, id, name, phone string
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
@@ -27,20 +32,24 @@ func Handler() {
 	default:
 		log.Fatalln("Wrong format of response")	
 	}
-
+	idInt, err := strconv.Atoi(id)
+	if err != nil {
+		log.Fatalln("Id should be integer")
+	}
+	newcnt := contact.Contact{Name: name, Id: idInt, Phone: phone}
 	switch method {
 	case "GET":
 		if len(parts) == 2 {
-			runGetOne()
+			responces.GetOne(db, dbname, idInt)
 		} else if len(parts) == 1 {
-			runGetAll()
+			responces.GetAll(db, dbname)
 		}
 	case "PUT":
-		runPut()
+		responces.Put(db, dbname, newcnt, idInt)
 	case "DELETE":
-		runDelete()
+		responces.Delete(db, dbname, idInt)
 	case "POST":
-		runPost()
+		responces.Post(db, dbname, newcnt)
 	default:
 		log.Fatalln("Undefined method")
 	}
