@@ -26,6 +26,7 @@ func isThereId(db *sql.DB, dbname string, cnt contact.Contact) bool {
 		}
 		if cnt.Id == currentId {
 			isId = true
+			break
 		}
 	}
 	return isId
