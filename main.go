@@ -17,6 +17,11 @@ func main() {
 		log.Fatalln("bad database name")
 	}
 	db, err := sql.Open("mysql", dbname)
+	if err != nil {
+		db.Close()
+		log.Fatalln("can't open database")
+	}
+	defer db.Close()
 	for {
 		fmt.Println("Enter method: ")
 		handler.Handler(db, dbname)
