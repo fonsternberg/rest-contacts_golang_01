@@ -31,5 +31,11 @@ func isThereId(db *sql.DB, dbname string, cnt contact.Contact, id int) bool {
 }
 
 func Put(db *sql.DB, dbname string, cnt contact.Contact, id int) {
-
+	isId := isThereId(db, dbname, cnt, id)
+	if isId {
+		Delete(db, dbname, id)
+		Post(db, dbname, cnt)
+	} else {
+		Post(db, dbname, cnt)
+	}
 }
