@@ -2,6 +2,7 @@ package handler
 
 import (
 	"database/sql"
+	"encoding/json"
 	"log"
 	"net/http"
 
@@ -9,7 +10,7 @@ import (
 )
 
 func (s *Server) getOne(w http.ResponseWriter, r *http.Request, id int) {
-	rows, err := db.Query("SELECT ", id, "from ", dbname)
+	rows, err := db.Query("SELECT id,from ")
 	if err != nil {
 		log.Fatalln("bad query")		
 	}
@@ -30,13 +31,24 @@ func (s *Server) getOne(w http.ResponseWriter, r *http.Request, id int) {
 }
 
 func (s *Server) getAll(w http.ResponseWriter, r *http.Request) {
-	count := 0
-	err := db.QueryRow("SELECT COUNT(*) FROM ", dbname).Scan(&count)
+	rows, err := s.DataB.Query("SELECT id, name, phone FROM contacts")
 	if err != nil {
-		log.Println("Zero elements")
+		http.Error(w, "database error", http.StatusInternalServerError)
 		return
 	}
-	for i := 1; i < count; i++ {
-		GetOne(db, dbname, i)
+	defer rows.Close()
+	var contacts []structs.Contact
+	for rows.Next() {
+		var c structs.Contact
+		err := rows.Scan(&c.Id, &c.Name, &c.Phone)
+		if err != nil {
+			http.Error(w, "scan error", http.StatusInternalServerError)
+		}
+		contacts = append(contacts, c)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(contacts)
+	if err != nil {
+		http.Error(w, "encode error", http.StatusInternalServerError)
 	}
 }
