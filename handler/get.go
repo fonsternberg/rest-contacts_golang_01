@@ -1,33 +1,35 @@
 package handler
 
 import (
-	"database/sql"
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/voyadger01/rest-contacts_golang_01/structs"
 )
 
 func (s *Server) getOne(w http.ResponseWriter, r *http.Request, id int) {
-	rows, err := db.Query("SELECT id,from ")
+	rows, err := s.DataB.Query("SELECT id, name, phone FROM contacts")
 	if err != nil {
-		log.Fatalln("bad query")		
+		http.Error(w, "database error", http.StatusInternalServerError)
+		return
 	}
 	defer rows.Close()
-	contacts := []contact.Contact{}
-	for rows.Next(){
-		cnt := contact.Contact{}
-		err := rows.Scan(&cnt.Name, &cnt.Phone)
+	for rows.Next() {
+		var c structs.Contact
+		err := rows.Scan(&c.Id, &c.Name, &c.Phone)
 		if err != nil {
-			log.Println("bad name or phone")
-			continue
+			http.Error(w, "scan err", http.StatusInternalServerError)
 		}
-		contacts = append(contacts, cnt)
+		if c.Id == id {
+			w.Header().Set("Content-Type", "application/json")
+			err = json.NewEncoder(w).Encode(c)
+			if err != nil {
+				http.Error(w, "encode error", http.StatusInternalServerError)
+			}
+			return
+		}
 	}
-	for i := range contacts {
-		fmt.Println("Contact ", id, ": ", contacts[i].Name, " ", contacts[i].Phone)
-	}
+	http.Error(w, "bad id", http.StatusInternalServerError)
 }
 
 func (s *Server) getAll(w http.ResponseWriter, r *http.Request) {
