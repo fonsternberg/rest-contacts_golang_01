@@ -1,14 +1,11 @@
 package handler
 
 import (
-	"database/sql"
-	"log"
-
-	"github.com/voyadger01/rest-contacts_golang_01/structs"
+	"net/http"
 )
 
 func (s *Server) post(w http.ResponseWriter, r *http.Request) {
-	result, err := db.Exec("INSERT INTO ", dbname, "VALUES", cnt.Name, cnt.Phone)
+	result, err := s.DataB.Exec("INSERT INTO contacts VALUES", cnt.Name, cnt.Phone)
 	if err != nil {
 		log.Fatalln("bad post")
 	}
