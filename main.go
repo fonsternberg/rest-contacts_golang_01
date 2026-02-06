@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -26,8 +25,8 @@ func main() {
 	if err != nil {
 		log.Fatalln("bad connection")
 	}
-
-	http.HandleFunc("/contacts", handler.Handler(db))
+	s := &handler.Server{DataB: db}
+	http.HandleFunc("/contacts", s.ContactsHandler)
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
