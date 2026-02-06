@@ -32,7 +32,7 @@ func isThereId(db *sql.DB, dbname string, cnt contact.Contact) bool {
 	return isId
 }
 
-func (s *Server) Put(w http.ResponseWriter, r *http.Request, id int) {
+func (s *Server) put(w http.ResponseWriter, r *http.Request, id int) {
 	isId := isThereId(db, dbname, cnt)
 	if isId {
 		Delete(db, dbname, id)

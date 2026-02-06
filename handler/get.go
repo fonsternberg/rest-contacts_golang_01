@@ -3,11 +3,12 @@ package handler
 import (
 	"database/sql"
 	"log"
+	"net/http"
 
 	"github.com/voyadger01/rest-contacts_golang_01/structs"
 )
 
-func (s *Server) GetOne(w http.ResponseWriter, r *http.Request, id int) {
+func (s *Server) getOne(w http.ResponseWriter, r *http.Request, id int) {
 	rows, err := db.Query("SELECT ", id, "from ", dbname)
 	if err != nil {
 		log.Fatalln("bad query")		
@@ -28,7 +29,7 @@ func (s *Server) GetOne(w http.ResponseWriter, r *http.Request, id int) {
 	}
 }
 
-func (s *Server) GetAll(w http.ResponseWriter, r *http.Request) {
+func (s *Server) getAll(w http.ResponseWriter, r *http.Request) {
 	count := 0
 	err := db.QueryRow("SELECT COUNT(*) FROM ", dbname).Scan(&count)
 	if err != nil {

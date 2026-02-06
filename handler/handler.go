@@ -16,29 +16,29 @@ func (s *Server) ContactsHandler (w http.ResponseWriter, r *http.Request)  {
 	case http.MethodGet:
 		id := r.URL.Query().Get("id")
 		if id == "" {
-			s.GetAll(w, r)
+			s.getAll(w, r)
 		} else {
 			idInt, err := strconv.Atoi(id)
 			if err != nil {
 				log.Fatalln("bad format of id")
 			}
-			s.GetOne(w, r, idInt)
+			s.getOne(w, r, idInt)
 		}
 	case http.MethodPost:
-		s.Post(w, r)
+		s.post(w, r)
 	case http.MethodPut:
 		id := r.URL.Query().Get("id")
 		idInt, err := strconv.Atoi(id)
 		if err != nil {
 			log.Fatalln("bad format of id")
 		}
-		s.Put(w, r, idInt)
+		s.put(w, r, idInt)
 	case http.MethodDelete:
 		id := r.URL.Query().Get("id")
 		idInt, err := strconv.Atoi(id)
 		if err != nil {
 			log.Fatalln("bad format of id")
 		}
-		s.Delete(w, r, idInt)
+		s.delete(w, r, idInt)
 	}
 }
