@@ -1,15 +1,10 @@
 package handler
 
 import (
-	"bufio"
 	"database/sql"
 	"log"
-	"os"
-	"strconv"
-	"strings"
 	"net/http"
-
-	"github.com/voyadger01/rest-contacts_golang_01/responces"
+	"strconv"
 )
 
 type Server struct {
@@ -18,13 +13,22 @@ type Server struct {
 
 func (s *Server) ContactsHandler (w http.ResponseWriter, r *http.Request)  {
 	switch r.Method {
-	case "GET":
-		
-	case "POST":
+	case http.MethodGet:
+		id := r.URL.Query().Get("id")
+		if id == "" {
+			s.GetAll(w, r)
+		} else {
+			idInt, err := strconv.Atoi(id)
+			if err != nil {
+				log.Fatalln("bad format of id")
+			}
+			s.GetOne(w, r, idInt)
+		}
+	case http.MethodPost:
 
-	case "PUT":
+	case http.MethodPut:
 
-	case "DELETE":
+	case http.MethodDelete:
 
 	}
 }
