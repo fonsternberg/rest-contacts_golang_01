@@ -4,26 +4,35 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"net/http"
+	"os"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/voyadger01/rest-contacts_golang_01/handler"
 )
 
 func main() {
-	var dbname string
-	fmt.Println("Enter database name: ")
-	n, err := fmt.Scanln(&dbname)
-	if err != nil || n > 1 {
-		log.Fatalln("bad database name")
+	dsn := os.Getenv("DB_DSN")
+	if dsn == "" {
+		log.Fatalln("database in env required")
 	}
-	db, err := sql.Open("mysql", dbname)
+
+	db, err := sql.Open("mysql", dsn)
 	if err != nil {
-		db.Close()
 		log.Fatalln("can't open database")
 	}
 	defer db.Close()
-	for {
-		fmt.Println("Enter method: ")
-		handler.Handler(db, dbname)
+	err = db.Ping()
+	if err != nil {
+		log.Fatalln("bad connection")
 	}
+
+	http.HandleFunc("/contacts", handler.Handler(db))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	log.Print("Server is running on ", port)
+	http.ListenAndServe(port, nil)
 }
