@@ -20,7 +20,7 @@ func (s *Server) ContactsHandler (w http.ResponseWriter, r *http.Request)  {
 		id := r.URL.Query().Get("id")
 
 		if id == "" {
-			s.getAll(w, r)
+			s.getAll(w)
 			return
 		} else {
 			idInt, err := strconv.Atoi(id)
@@ -28,13 +28,13 @@ func (s *Server) ContactsHandler (w http.ResponseWriter, r *http.Request)  {
 				http.Error(w, "bad id(must be integer)", http.StatusBadRequest)
 				return
 			}
-			s.getOne(w, r, idInt)
+			s.getOne(w, idInt)
 		}
 
 	case http.MethodPost:
 		var contact structs.Contact
 
-		err := json.NewDecoder(r.Body).Decode( contact)
+		err := json.NewDecoder(r.Body).Decode(&contact)
 		if err != nil {
 			http.Error(w, "bad json", http.StatusBadRequest)
 			return
@@ -66,7 +66,7 @@ func (s *Server) ContactsHandler (w http.ResponseWriter, r *http.Request)  {
 		if err != nil {
 			log.Fatalln("bad format of id")
 		}
-		
+
 		s.delete(w, r, idInt)
 	}
 }

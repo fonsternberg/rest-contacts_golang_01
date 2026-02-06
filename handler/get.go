@@ -7,7 +7,7 @@ import (
 	"github.com/voyadger01/rest-contacts_golang_01/structs"
 )
 
-func (s *Server) getOne(w http.ResponseWriter, r *http.Request, id int) {
+func (s *Server) getOne(w http.ResponseWriter, id int) {
 	rows, err := s.DataB.Query("SELECT id, name, phone FROM contacts")
 	if err != nil {
 		http.Error(w, "database error", http.StatusInternalServerError)
@@ -32,7 +32,7 @@ func (s *Server) getOne(w http.ResponseWriter, r *http.Request, id int) {
 	http.Error(w, "bad id", http.StatusInternalServerError)
 }
 
-func (s *Server) getAll(w http.ResponseWriter, r *http.Request) {
+func (s *Server) getAll(w http.ResponseWriter) {
 	rows, err := s.DataB.Query("SELECT id, name, phone FROM contacts")
 	if err != nil {
 		http.Error(w, "database error", http.StatusInternalServerError)
