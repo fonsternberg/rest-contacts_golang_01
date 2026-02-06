@@ -47,7 +47,7 @@ func (s *Server) ContactsHandler (w http.ResponseWriter, r *http.Request)  {
 		if contact.Phone == "" {
 			http.Error(w, "phone required", http.StatusBadRequest)
 		}
-		s.post(w, r, contact)
+		s.createContact(w, contact)
 		return
 
 	case http.MethodPut:
@@ -57,7 +57,7 @@ func (s *Server) ContactsHandler (w http.ResponseWriter, r *http.Request)  {
 		if err != nil {
 			log.Fatalln("bad format of id")
 		}
-		s.put(w, r, idInt)
+		s.updateContact(w, r, idInt)
 
 	case http.MethodDelete:
 		id := r.URL.Query().Get("id")
@@ -67,6 +67,6 @@ func (s *Server) ContactsHandler (w http.ResponseWriter, r *http.Request)  {
 			log.Fatalln("bad format of id")
 		}
 
-		s.delete(w, r, idInt)
+		s.deleteContact(w, idInt)
 	}
 }

@@ -5,5 +5,5 @@ import (
 
 )
 
-func (s *Server) put(w http.ResponseWriter, r *http.Request, id int) {
+func (s *Server) updateContact(w http.ResponseWriter, r *http.Request, id int) {
 }

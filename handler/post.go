@@ -8,7 +8,7 @@ import (
 	"github.com/voyadger01/rest-contacts_golang_01/structs"
 )
 
-func (s *Server) post(w http.ResponseWriter, r *http.Request, contact structs.Contact) {
+func (s *Server) createContact(w http.ResponseWriter, contact structs.Contact) {
 	result, err := s.DataB.Exec("INSERT INTO contacts (name, phone, email) VALUES (?, ?)", contact.Name, contact.Phone)
 	if err != nil {
 		log.Println("DB insert error: ", err)
