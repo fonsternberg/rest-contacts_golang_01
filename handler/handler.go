@@ -52,12 +52,15 @@ func (s *Server) ContactsHandler (w http.ResponseWriter, r *http.Request)  {
 
 	case http.MethodPut:
 		id := r.URL.Query().Get("id")
-
+		name := r.URL.Query().Get("name")
+		phone := r.URL.Query().Get("phone")
 		idInt, err := strconv.Atoi(id)
+		updated := structs.Contact{Id: idInt, Name: name, Phone: phone}
+
 		if err != nil {
 			log.Fatalln("bad format of id")
 		}
-		s.updateContact(w, r, idInt)
+		s.updateContact(w, idInt, updated)
 
 	case http.MethodDelete:
 		id := r.URL.Query().Get("id")
