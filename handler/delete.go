@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"net/http"
 	"log"
+	"net/http"
 )
 
 func (s *Server) deleteContact(w http.ResponseWriter, id int) {

@@ -14,7 +14,7 @@ type Server struct {
 	DataB *sql.DB
 }
 
-func (s *Server) ContactsHandler (w http.ResponseWriter, r *http.Request)  {
+func (s *Server) ContactsHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		id := r.URL.Query().Get("id")
